@@ -203,6 +203,8 @@ do_auth(struct login_ctx *ctx, const char *cmd)
 
     prompts = cfg.prompts;
 
+    set_enrollment_redirect_flag(cfg.enrollmentredirect); // set the enrollment redirect flag
+
     /* Detect non-interactive sessions */
     if ((p = getenv("SSH_ORIGINAL_COMMAND")) != NULL ||
         !isatty(STDIN_FILENO)) {
@@ -316,6 +318,9 @@ do_auth(struct login_ctx *ctx, const char *cmd)
         } else if (code == DUO_ABORT) {
             duo_log(LOG_WARNING, "Aborted Duo login",
                 duouser, host, duo_geterr(duo));
+        } else if (code == DUO_ENROLL) {
++            duo_log(LOG_WARNING, "Aborted Duo login due to URL redirection",
++                duouser, host, duo_geterr(duo));
         } else if (code == DUO_FAIL_SAFE_ALLOW) {
             duo_log(LOG_WARNING, "Failsafe Duo login",
                 duouser, host, duo_geterr(duo));

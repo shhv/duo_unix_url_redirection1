@@ -46,6 +46,12 @@
 #define AUTODEFAULT_MSG     "Using default second-factor authentication."
 #define ENV_VAR_MSG         "Reading $DUO_PASSCODE..."
 
+int enrollmentredirect = 1; // For custom enrollment redirects
+
+void set_enrollment_redirect_flag(int flag){
+    enrollmentredirect = flag;
+}
+
 /*
  * Finding the maximum length for the machine's hostname
  * Idea and technique originated from https://github.com/openssh/openssh-portable
@@ -487,11 +493,12 @@ _duo_preauth(struct duo_ctx *ctx, const char *username,
             }
             ret = DUO_ABORT;
         } else if (strcasecmp(p, "enroll") == 0) {
-            if (ctx->conv_status != NULL) {
-                ctx->conv_status(ctx->conv_arg, output);
+            if (enrollmentredirect && ctx->conv_status != NULL) {
+                ctx->conv_status(ctx->conv_arg, output);    /*This is the line that prints the enrollment info. This If condition can be put under an environment variable and check if the URL redirection is enabled and skip printing this line*/
             }
             _duo_seterr(ctx, "User enrollment required");
-            ret = DUO_ABORT;
+            //ret = DUO_ABORT;
+            ret = DUO_ENROLL;
         } else {
             _duo_seterr(ctx, "JSON invalid 'result': %s", p);
             ret = DUO_SERVER_ERROR;

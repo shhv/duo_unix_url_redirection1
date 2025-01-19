@@ -21,6 +21,7 @@ typedef enum {
     DUO_SERVER_ERROR,		/* we screwed up */
     DUO_FAIL_SAFE_ALLOW,    /* preauth fails in failsafe mode */
     DUO_FAIL_SECURE_DENY,   /* preauth fails in failsecure mode */ 
+    DUO_ENROLL,
 } duo_code_t;
 
 #define DUO_FLAG_SYNC	(1 << 0)	/* no incremental status reporting */
@@ -77,5 +78,7 @@ const char *duo_geterr(duo_t *d);
 
 /* Close API handle. */
 duo_t *duo_close(duo_t *d);
+
+void set_enrollment_redirect_flag(int flag);
 
 #endif /* DUO_H */

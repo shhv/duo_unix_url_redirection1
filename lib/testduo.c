@@ -21,8 +21,8 @@ main(int argc, char *argv[])
 	duo_t *duo;
 	duo_code_t code;
 	char *host, *ikey, *skey, *username;
-	int i, flags, retries;
-
+	int i, flags, retries, enrollmentredirect;
+	
 	if (argc != 2) {
 		fprintf(stderr, "usage: %s <username>\n", argv[0]);
 		exit(1);
@@ -30,6 +30,7 @@ main(int argc, char *argv[])
 	username = argv[1];
 	flags = 0;
 	retries = 3;
+	enrollmentredirect = 1;
 	
 	if ((host = getenv("DUO_API_HOST")) == NULL ||
             (ikey = getenv("DUO_IKEY")) == NULL ||
@@ -38,6 +39,9 @@ main(int argc, char *argv[])
                     "DUO_SKEY environment\n");
 		exit(1);
 	}
+
+	set_enrollment_redirect_flag(0); // set the enrollment redirect flag
+
 	if ((duo = duo_open(host, ikey, skey, "testduo", NULL, DUO_NO_TIMEOUT, NULL)) == NULL) {
 		fprintf(stderr, "duo_open failed\n");
 		exit(1);

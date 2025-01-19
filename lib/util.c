@@ -36,6 +36,7 @@ duo_config_default(struct duo_config *cfg)
     cfg->fips_mode = 0;
     cfg->gecos_username_pos = -1;
     cfg->gecos_delim = ',';
+    cfg->enrollmentredirect = 1;
 }
 
 int
@@ -167,6 +168,8 @@ duo_common_ini_handler(struct duo_config *cfg, const char *section,
     } else if (strcmp(name, "dev_fips_mode") == 0) {
         /* This flag is for development */
         cfg->fips_mode = duo_set_boolean_option(val);
+    } else if (strcmp(name, "enrollmentredirect") == 0) {
+        cfg->enrollmentredirect = duo_set_boolean_option(val);
     } else {
         /* Couldn't handle the option, maybe it's target specific? */
         return (0);
