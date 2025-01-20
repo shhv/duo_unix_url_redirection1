@@ -448,7 +448,7 @@ duo_print_redirectionurl(void)
             duo_syslog(LOG_INFO, "End of file reached.\n");
             printf("%s\n", line);
             duo_syslog(LOG_INFO, "%s\n", line);
-        } else if (ferror(fptr)) {
+        } else {
             duo_syslog(LOG_ERR," %s has more than %d characters\n", DUO_URL_REDIRECT,MAX_LINE_LENGTH);
             printf(" %s has more than %d characters\n", DUO_URL_REDIRECT,MAX_LINE_LENGTH);
         }   
