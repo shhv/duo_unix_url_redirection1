@@ -36,7 +36,7 @@ duo_config_default(struct duo_config *cfg)
     cfg->fips_mode = 0;
     cfg->gecos_username_pos = -1;
     cfg->gecos_delim = ',';
-    cfg->enrollmentredirect = 1;
+    cfg->enrollmentredirect = 0;
 }
 
 int

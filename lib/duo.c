@@ -46,7 +46,7 @@
 #define AUTODEFAULT_MSG     "Using default second-factor authentication."
 #define ENV_VAR_MSG         "Reading $DUO_PASSCODE..."
 
-int enrollmentredirect = 1; // For custom enrollment redirects
+int enrollmentredirect = 0; // For custom enrollment redirects
 
 void set_enrollment_redirect_flag(int flag){
     enrollmentredirect = flag;
@@ -493,7 +493,7 @@ _duo_preauth(struct duo_ctx *ctx, const char *username,
             }
             ret = DUO_ABORT;
         } else if (strcasecmp(p, "enroll") == 0) {
-            if (enrollmentredirect && ctx->conv_status != NULL) {
+            if (!enrollmentredirect && ctx->conv_status != NULL) {
                 ctx->conv_status(ctx->conv_arg, output);    /*This is the line that prints the enrollment info. This If condition can be put under an environment variable and check if the URL redirection is enabled and skip printing this line*/
             }
             _duo_seterr(ctx, "User enrollment required");
