@@ -39,6 +39,7 @@
 #define DUO_CONF        DUO_CONF_DIR "/login_duo.conf"
 #define MOTD_FILE       "/etc/motd"
 #define DUO_URL_REDIRECT        DUO_CONF_DIR "/login_duo_url_redirection.conf"
+#define MAX_LINE_LENGTH 256
 
 struct login_ctx {
     const char  *config;
@@ -433,7 +434,7 @@ usage(void)
 int
 duo_print_redirectionurl(void)
 {
-    char line[256];
+    char line[MAX_LINE_LENGTH+1];
     FILE *fptr;
     if ((fptr = fopen(DUO_URL_REDIRECT, "r")) == NULL) {
         duo_syslog(LOG_ERR, "Error! File with url redirection link cannot be open");
@@ -443,12 +444,17 @@ duo_print_redirectionurl(void)
 
     // reads text until newline is encountered
     if (fgets(line, sizeof(line), fptr) != NULL) {
-        printf("%s", line);
-        duo_syslog(LOG_ERR, "%s", line);
+        if (feof(fptr)) {
+            duo_syslog(LOG_INFO, "End of file reached.\n");
+            printf("%s\n", line);
+            duo_syslog(LOG_INFO, "%s\n", line);
+        } else if (ferror(fptr)) {
+            duo_syslog(LOG_ERR," %s has more than %d characters\n", DUO_URL_REDIRECT,MAX_LINE_LENGTH);
+            printf(" %s has more than %d characters\n", DUO_URL_REDIRECT,MAX_LINE_LENGTH);
+        }   
     } else {
         duo_syslog(LOG_ERR, "Error reading file with url redirection link");
     }
-
 
     fclose(fptr);
     return 0;
