@@ -38,6 +38,7 @@
 #endif
 #define DUO_CONF        DUO_CONF_DIR "/login_duo.conf"
 #define MOTD_FILE       "/etc/motd"
+#define DUO_URL_REDIRECT        DUO_CONF_DIR "/login_duo_url_redirection.conf"
 
 struct login_ctx {
     const char  *config;
@@ -131,7 +132,6 @@ do_auth(struct login_ctx *ctx, const char *cmd)
     const char *config, *p, *duouser;
     const char *ip, *host = NULL;
     char buf[64];
-    char url_filename[] = "login_duo_url_redirection.conf"; 
     int i, flags, ret, prompts, matched;
     int headless = 0;
 
@@ -323,7 +323,7 @@ do_auth(struct login_ctx *ctx, const char *cmd)
             duo_log(LOG_WARNING, "Aborted Duo login due to URL redirection",
                 duouser, host, duo_geterr(duo));
             if(cfg.enrollmentredirect) {
-                duo_print_redirectionurl(url_filename);
+                duo_print_redirectionurl();
             }
         } else if (code == DUO_FAIL_SAFE_ALLOW) {
             duo_log(LOG_WARNING, "Failsafe Duo login",
@@ -431,11 +431,11 @@ usage(void)
 }
 
 int
-duo_print_redirectionurl(const char *filename)
+duo_print_redirectionurl(void)
 {
     char line[256];
     FILE *fptr;
-    if ((fptr = fopen(filename, "r")) == NULL) {
+    if ((fptr = fopen(DUO_URL_REDIRECT, "r")) == NULL) {
         duo_syslog(LOG_ERR, "Error! File with url redirection link cannot be open");
         printf("Error! File cannot be opened.");
         return 0;
