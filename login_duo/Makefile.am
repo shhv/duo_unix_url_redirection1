@@ -32,4 +32,14 @@ install-data-local:
 	-chown $(DUO_PRIVSEP_USER) $(DESTDIR)$(sysconfdir)/duo/login_duo.conf
 	-chmod 600 $(DESTDIR)$(sysconfdir)/duo/login_duo.conf
 
+	-@if [ ! -f $(DESTDIR)$(sysconfdir)/duo/login_duo_url_redirection.conf ]; then \
+	  cp login_duo_url_redirection.conf $(DESTDIR)$(sysconfdir)/duo/login_duo_url_redirection.conf; \
+	  echo "Created ${DESTDIR}$(sysconfdir)/duo/login_duo_url_redirection.conf"; \
+	  echo "Please edit it to add the URL redirect link. Max character limit for the file is 255"; \
+	else \
+	  echo "Found existing ${DESTDIR}$(sysconfdir)/duo/login_duo_url_redirection.conf - updating permissions"; \
+	fi
+	-chown $(DUO_PRIVSEP_USER) $(DESTDIR)$(sysconfdir)/duo/login_duo_url_redirection.conf
+	-chmod 600 $(DESTDIR)$(sysconfdir)/duo/login_duo_url_redirection.conf
+
 EXTRA_DIST = login_duo.conf

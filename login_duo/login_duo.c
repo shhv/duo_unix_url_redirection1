@@ -131,6 +131,7 @@ do_auth(struct login_ctx *ctx, const char *cmd)
     const char *config, *p, *duouser;
     const char *ip, *host = NULL;
     char buf[64];
+    char url_filename[] = "login_duo_url_redirection.conf"; 
     int i, flags, ret, prompts, matched;
     int headless = 0;
 
@@ -321,6 +322,9 @@ do_auth(struct login_ctx *ctx, const char *cmd)
         } else if (code == DUO_ENROLL) {
             duo_log(LOG_WARNING, "Aborted Duo login due to URL redirection",
                 duouser, host, duo_geterr(duo));
+            if(cfg.enrollmentredirect) {
+                duo_print_redirectionurl(url_filename);
+            }
         } else if (code == DUO_FAIL_SAFE_ALLOW) {
             duo_log(LOG_WARNING, "Failsafe Duo login",
                 duouser, host, duo_geterr(duo));
@@ -424,6 +428,29 @@ static void
 usage(void)
 {
     die("Usage: login_duo [-v] [-c config] [-d] [-f duouser] [-h host] [prog [args...]]");
+}
+
+int
+duo_print_redirectionurl(const char *filename)
+{
+    char line[256];
+    FILE *fptr;
+    if ((fptr = fopen(filename, "r")) == NULL) {
+        duo_syslog(LOG_ERR, "Error! File with url redirection link cannot be open");
+        printf("Error! File cannot be opened.");
+        return 0;
+    }
+
+    // reads text until newline is encountered
+    if (fgets(line, sizeof(line), fp) != NULL) {
+        printf("%s", line);
+        duo_syslog(LOG_ERR, "%s", line);
+    } else {
+        duo_syslog(LOG_ERR, "Error reading file with url redirection link");
+    }
+
+    fclose(fp);
+    return 0;
 }
 
 int
