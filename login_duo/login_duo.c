@@ -319,8 +319,8 @@ do_auth(struct login_ctx *ctx, const char *cmd)
             duo_log(LOG_WARNING, "Aborted Duo login",
                 duouser, host, duo_geterr(duo));
         } else if (code == DUO_ENROLL) {
-+            duo_log(LOG_WARNING, "Aborted Duo login due to URL redirection",
-+                duouser, host, duo_geterr(duo));
+            duo_log(LOG_WARNING, "Aborted Duo login due to URL redirection",
+                duouser, host, duo_geterr(duo));
         } else if (code == DUO_FAIL_SAFE_ALLOW) {
             duo_log(LOG_WARNING, "Failsafe Duo login",
                 duouser, host, duo_geterr(duo));

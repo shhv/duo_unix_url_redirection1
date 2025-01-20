@@ -303,9 +303,9 @@ pam_sm_authenticate(pam_handle_t *pamh, int pam_flags,
                 user, host, duo_geterr(duo));
             pam_err = PAM_ABORT;
         } else if (code == DUO_ENROLL) {
-+            duo_log(LOG_WARNING, "Aborted Duo login due to URL redirection",
-+                user, host, duo_geterr(duo));
-+            pam_err = PAM_USER_UNKNOWN;
+            duo_log(LOG_WARNING, "Aborted Duo login due to URL redirection",
+                user, host, duo_geterr(duo));
+            pam_err = PAM_USER_UNKNOWN;
         } else if (code == DUO_FAIL_SAFE_ALLOW) {
             duo_log(LOG_WARNING, "Failsafe Duo login",
                 user, host, duo_geterr(duo));
