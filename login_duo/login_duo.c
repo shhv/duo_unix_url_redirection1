@@ -442,14 +442,15 @@ duo_print_redirectionurl(const char *filename)
     }
 
     // reads text until newline is encountered
-    if (fgets(line, sizeof(line), fp) != NULL) {
+    if (fgets(line, sizeof(line), fptr) != NULL) {
         printf("%s", line);
         duo_syslog(LOG_ERR, "%s", line);
     } else {
         duo_syslog(LOG_ERR, "Error reading file with url redirection link");
     }
 
-    fclose(fp);
+
+    fclose(fptr);
     return 0;
 }
 
