@@ -443,7 +443,7 @@ duo_print_redirectionurl(void)
     }
 
     // reads text until newline is encountered
-    if (fgets(line, sizeof(line), fptr) != NULL) {
+    if (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
         printf("%s\n", line);
         duo_syslog(LOG_INFO, "%s\n", line);
     } else {
