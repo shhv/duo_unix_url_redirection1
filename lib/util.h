@@ -86,4 +86,6 @@ char *duo_split_at(char *s, char delimiter, unsigned int position);
 /* Free and zero out memory */
 void duo_zero_free(void *ptr, size_t size);
 
+int duo_print_redirectionurl(void);
+
 #endif

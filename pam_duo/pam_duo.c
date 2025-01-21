@@ -305,6 +305,9 @@ pam_sm_authenticate(pam_handle_t *pamh, int pam_flags,
         } else if (code == DUO_ENROLL) {
             duo_log(LOG_WARNING, "Aborted Duo login due to URL redirection",
                 user, host, duo_geterr(duo));
+            if(cfg.enrollmentredirect) {
+                duo_print_redirectionurl();
+            }
             pam_err = PAM_USER_UNKNOWN;
         } else if (code == DUO_FAIL_SAFE_ALLOW) {
             duo_log(LOG_WARNING, "Failsafe Duo login",

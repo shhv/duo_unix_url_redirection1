@@ -23,6 +23,9 @@
 #include "util.h"
 #include "groupaccess.h"
 
+#define DUO_URL_REDIRECT        DUO_CONF_DIR "/login_duo_url_redirection.conf"
+#define MAX_LINE_LENGTH 256
+
 int duo_debug = 0;
 
 void
@@ -358,4 +361,27 @@ duo_zero_free(void *ptr, size_t size)
 #endif
         free(ptr);
     }
+}
+
+int
+duo_print_redirectionurl(void)
+{
+    char line[MAX_LINE_LENGTH+1];
+    FILE *fptr;
+    if ((fptr = fopen(DUO_URL_REDIRECT, "r")) == NULL) {
+        duo_syslog(LOG_ERR, "Error! File with url redirection link cannot be open");
+        printf("Error! File cannot be opened.");
+        return 0;
+    }
+
+    // reads text until newline is encountered
+    if (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
+        printf("%s\n", line);
+        duo_syslog(LOG_INFO, "%s\n", line);
+    } else {
+        duo_syslog(LOG_ERR, "Error reading file %s", DUO_URL_REDIRECT);
+    }
+
+    fclose(fptr);
+    return 0;
 }
