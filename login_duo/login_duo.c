@@ -444,16 +444,10 @@ duo_print_redirectionurl(void)
 
     // reads text until newline is encountered
     if (fgets(line, sizeof(line), fptr) != NULL) {
-        if (feof(fptr)) {
-            duo_syslog(LOG_INFO, "End of file reached.\n");
-            printf("%s\n", line);
-            duo_syslog(LOG_INFO, "%s\n", line);
-        } else {
-            duo_syslog(LOG_ERR," %s has more than %d characters\n", DUO_URL_REDIRECT,MAX_LINE_LENGTH);
-            printf(" %s has more than %d characters\n", DUO_URL_REDIRECT,MAX_LINE_LENGTH);
-        }   
+        printf("%s\n", line);
+        duo_syslog(LOG_INFO, "%s\n", line);
     } else {
-        duo_syslog(LOG_ERR, "Error reading file with url redirection link");
+        duo_syslog(LOG_ERR, "Error reading file %s", DUO_URL_REDIRECT);
     }
 
     fclose(fptr);
